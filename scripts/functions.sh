@@ -45,10 +45,16 @@ install() {
   if [ -n "${SERVER_BRANCH}" ]; then
     LogInfo "Installing version: ${SERVER_BRANCH}"
     envsubst < /home/steam/server/install_version.scmd > /tmp/install_version.scmd
-    /home/steam/steamcmd/steamcmd.sh +runscript /tmp/install_version.scmd
+    if ! /home/steam/steamcmd/steamcmd.sh +runscript /tmp/install_version.scmd; then
+      LogError "Failed to install server version ${SERVER_BRANCH}"
+      exit 1
+    fi
   else
     LogInfo "Installing stable branch"
-    /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install.scmd
+    if ! /home/steam/steamcmd/steamcmd.sh +runscript /home/steam/server/install.scmd; then
+      LogError "Failed to install stable server"
+      exit 1
+    fi
   fi
 }
 
